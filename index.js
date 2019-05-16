@@ -12,7 +12,7 @@ res.sendFile(path.join(__dirname + '/index.html'));
 });
 
 app.get('/runscript', function(req, res) {
-  var command = spawn(__dirname + '/testscript.sh');
+  var command = spawn(__dirname + '/testscript.sh', [req.query.textField]);
   var output  = [];
 
   command.stdout.on('data', function(chunk) {
