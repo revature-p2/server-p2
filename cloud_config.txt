@@ -1,0 +1,75 @@
+#cloud-config
+package_update: true
+packages:
+    - build-essential -y
+    - curl -y
+    - file -y
+    - git -y
+    - node -y
+    - npm -y
+write_files:
+    -   owners: 'ashura:ashura'
+    -   path: '/home/ashura/testscript.sh'
+        content: |
+            #!/bin/bash
+            r=$1
+            echo "$r"
+            
+    -   owners: 'ashura:ashura'
+    -   path: '/home/ashura/index.html'
+        content: |
+            <form action="/runscript" method="get">
+                <input type="text" id="textFieldId" name="textField">
+                <input type="submit" value="Run me now!">
+            </form>
+
+    -   owners: 'ashura:ashura'
+    -   path: '/home/ashura/index.js'
+        content: |
+            const express = require('express')
+            const app = express()
+            const port = 3000
+            var path = require('path');
+            var spawn   = require('child_process').spawn;
+
+            app.use(express.static(__dirname));
+
+            //renders the html page
+            app.get('/', function (req, res) {
+                res.sendFile(path.join(__dirname + '/index.html'));
+            });
+
+            //input button submits form "/runscript" and activates the commands in spawn() 
+            app.get('/runscript', function(req, res) {
+                var command = spawn(__dirname + '/testscript.sh', [req.query.textField]);
+                var output  = [];
+
+                command.stdout.on('data', function(chunk) {
+                    //I console.loged this below and it returned '1'. Not sure why...
+                    output.push(chunk);
+                });
+
+                //I believe this is where the real action occurs
+                command.on('close', function(code) {
+                    if (code === 0)
+                        res.send(Buffer.concat(output)); //console.loged this and it showed a lot of stuff... 
+                    else
+                        res.send(500); // when the script fails, generate a Server Error HTTP response
+                });
+            });
+
+            app.listen(port, () => console.log(`listening on port ${port}!`))
+    
+runcmd:
+    - cd /home/ashura
+    - sudo npm init -y
+    - sudo npm install express --save
+    - sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+    - sudo touch .profile
+    - sudo chmod 777 .profile
+    - sudo chown ashura:ashura .profile
+    - echo 'eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)' >>~/.profile
+    - eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+    - brew install gcc
+    - brew install azure-cli
+    - node index.js
