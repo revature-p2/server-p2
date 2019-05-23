@@ -18,7 +18,7 @@ res.sendFile(path.join(__dirname + '/app.html'));
 /////// NETWORK CREATE ///////
 
 app.get('/network', function(req, res) {
-  var command = spawn(__dirname + '/createnetwork.sh', [req.query.textField]);
+  var command = spawn(__dirname + '/createnetwork.sh', [req.query.vnetname, req.query.vnetip, req.query.vnetmask, req.query.privatevnetsubnet, req.query.privatevnetip, req.query.privatevnetmask, req.query.publicvnetsubnet, req.query.publicvnetip, req.query.publicvnetmask]);
   var output  = [];
 
   command.stdout.on('data', function(chunk) {
@@ -78,7 +78,7 @@ command.on('close', function(code) {
 ///// CREATE AND DELETE ROLES //////
 
 app.get('/roles', function(req, res) {
-  var command = spawn(__dirname + '/users.sh', [req.query.roleAction, req.query.roleUsername, req.query.roleType]);
+  var command = spawn(__dirname + '/roles.sh', [req.query.roleAction, req.query.roleUsername, req.query.roleType]);
   var output  = [];
 
   command.stdout.on('data', function(chunk) {
