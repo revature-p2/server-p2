@@ -13,12 +13,12 @@ res.sendFile(path.join(__dirname + '/app.html'));
 });
 
 
-//input button submits form "/runscript" and activates the commands in spawn() 
+//input button submits form "/runscript" and activates the commands in spawn()
 
 /////// NETWORK CREATE ///////
 
 app.get('/network', function(req, res) {
-  var command = spawn(__dirname + '/createnetwork.sh', [req.query.vnetname, req.query.vnetip, req.query.vnetmask, req.query.privatevnetsubnet, req.query.privatevnetip, req.query.privatevnetmask, req.query.publicvnetsubnet, req.query.publicvnetip, req.query.publicvnetmask]);
+  var command = spawn(__dirname + '/createnetwork.sh', [req.query.vnetname, req.query.vnetip, req.query.privatevnetsubnet, req.query.privatevnetip, req.query.publicvnetsubnet, req.query.publicvnetip]);
   var output  = [];
 
   command.stdout.on('data', function(chunk) {
@@ -29,7 +29,7 @@ app.get('/network', function(req, res) {
   //I believe this is where the real action occurs
 command.on('close', function(code) {
     if (code === 0)
-      res.send(Buffer.concat(output)); //console.loged this and it showed a lot of stuff... 
+      res.send(Buffer.concat(output)); //console.loged this and it showed a lot of stuff...
     else
       res.send(500); // when the script fails, generate a Server Error HTTP response
   });
@@ -38,7 +38,7 @@ command.on('close', function(code) {
 ////// VM CREATE ///////
 
 app.get('/createvm', function(req, res) {
-  var command = spawn(__dirname + '/createvm.sh', [req.query.VMname, req.query.VMnetwork, req.query.VMuser, req.query.VMpassword]);
+  var command = spawn(__dirname + '/createvm.sh', [req.query.VMname, req.query.VMnetwork, req.query.VMsubnet, req.query.VMuser, req.query.VMpassword]);
   var output  = [];
 
   command.stdout.on('data', function(chunk) {
@@ -49,7 +49,7 @@ app.get('/createvm', function(req, res) {
   //I believe this is where the real action occurs
 command.on('close', function(code) {
     if (code === 0)
-      res.send(Buffer.concat(output)); //console.loged this and it showed a lot of stuff... 
+      res.send(Buffer.concat(output)); //console.loged this and it showed a lot of stuff...
     else
       res.send(500); // when the script fails, generate a Server Error HTTP response
   });
@@ -69,7 +69,7 @@ app.get('/users', function(req, res) {
   //I believe this is where the real action occurs
 command.on('close', function(code) {
     if (code === 0)
-      res.send(Buffer.concat(output)); //console.loged this and it showed a lot of stuff... 
+      res.send(Buffer.concat(output)); //console.loged this and it showed a lot of stuff...
     else
       res.send(500); // when the script fails, generate a Server Error HTTP response
   });
@@ -78,7 +78,7 @@ command.on('close', function(code) {
 ///// CREATE AND DELETE ROLES //////
 
 app.get('/roles', function(req, res) {
-  var command = spawn(__dirname + '/roles.sh', [req.query.roleAction, req.query.roleUsername, req.query.roleType]);
+  var command = spawn(__dirname + '/roles.sh', [req.query.roleUsername, req.query.roleAction, req.query.roleType]);
   var output  = [];
 
   command.stdout.on('data', function(chunk) {
@@ -89,7 +89,7 @@ app.get('/roles', function(req, res) {
   //I believe this is where the real action occurs
 command.on('close', function(code) {
     if (code === 0)
-      res.send(Buffer.concat(output)); //console.loged this and it showed a lot of stuff... 
+      res.send(Buffer.concat(output)); //console.loged this and it showed a lot of stuff...
     else
       res.send(500); // when the script fails, generate a Server Error HTTP response
   });
@@ -98,7 +98,7 @@ command.on('close', function(code) {
 ///// WEBAPP CREATE //////
 
 app.get('/webapp', function(req, res) {
-  var command = spawn(__dirname + '/webapp.sh', [req.query.webappname, req.query.webappplan]);
+  var command = spawn(__dirname + '/webapp.sh', [req.query.webappname, req.query.gitrepo]);
   var output  = [];
 
   command.stdout.on('data', function(chunk) {
@@ -109,7 +109,7 @@ app.get('/webapp', function(req, res) {
   //I believe this is where the real action occurs
 command.on('close', function(code) {
     if (code === 0)
-      res.send(Buffer.concat(output)); //console.loged this and it showed a lot of stuff... 
+      res.send(Buffer.concat(output)); //console.loged this and it showed a lot of stuff...
     else
       res.send(500); // when the script fails, generate a Server Error HTTP response
   });
@@ -118,7 +118,7 @@ command.on('close', function(code) {
 ////// BLOB STORAGE /////
 
 app.get('/blob', function(req, res) {
-  var command = spawn(__dirname + '/storage.sh', [req.query.storagename]);
+  var command = spawn(__dirname + '/storage.sh', [req.query.storagename, req.query.containername]);
   var output  = [];
 
   command.stdout.on('data', function(chunk) {
@@ -129,7 +129,7 @@ app.get('/blob', function(req, res) {
   //I believe this is where the real action occurs
 command.on('close', function(code) {
     if (code === 0)
-      res.send(Buffer.concat(output)); //console.loged this and it showed a lot of stuff... 
+      res.send(Buffer.concat(output)); //console.loged this and it showed a lot of stuff...
     else
       res.send(500); // when the script fails, generate a Server Error HTTP response
   });
@@ -149,9 +149,10 @@ app.get('/sqldb', function(req, res) {
   //I believe this is where the real action occurs
 command.on('close', function(code) {
     if (code === 0)
-      res.send(Buffer.concat(output)); //console.loged this and it showed a lot of stuff... 
+      res.send(Buffer.concat(output)); //console.loged this and it showed a lot of stuff...
     else
       res.send(500); // when the script fails, generate a Server Error HTTP response
+//      window.location.replace("https://lechickencloudserver.azurewebsites.net/")
   });
 });
 
@@ -169,11 +170,10 @@ app.get('/cosmos', function(req, res) {
   //I believe this is where the real action occurs
 command.on('close', function(code) {
     if (code === 0)
-      res.send(Buffer.concat(output)); //console.loged this and it showed a lot of stuff... 
+      res.send(Buffer.concat(output)); //console.loged this and it showed a lot of stuff...
     else
       res.send(500); // when the script fails, generate a Server Error HTTP response
   });
 });
 
 app.listen(port, () => console.log(`listening on port ${port}!`))
-
