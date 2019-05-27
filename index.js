@@ -15,6 +15,25 @@ res.sendFile(path.join(__dirname + '/app.html'));
 
 //input button submits form "/runscript" and activates the commands in spawn()
 
+/////// USER GROUP CREATE ///////
+
+app.get('/creatergroup', function(req, res) {
+  var command = spawn(__dirname + '/createresourchgroup.sh', [req.query.rgroup])
+  var output  = [];
+
+  command.stdout.on('data', function(chunk) {
+      //I console.loged this below and it returned '1'. Not sure why...
+    output.push(chunk);
+  });
+  
+  command.on('close', function(code) {
+    if (code === 0)
+      res.send(Buffer.concat(output)); //console.loged this and it showed a lot of stuff...
+    else
+      res.send(500); // when the script fails, generate a Server Error HTTP response
+  });
+});
+
 /////// NETWORK CREATE ///////
 
 app.get('/network', function(req, res) {
