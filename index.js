@@ -17,10 +17,11 @@ res.sendFile(path.join(__dirname + '/app.html'));
 
 /////// USER GROUP CREATE ///////
 
+app.get('/', function(req,res){
 var group = req.query.rgroup
-
+}
 app.get('/creatergroup', function(req, res) {
-  var command = spawn(__dirname + '/createresourchgroup.sh', req.query.rgroup)
+  var command = spawn(__dirname + '/createresourchgroup.sh', group)
   var output  = [];
 
   command.stdout.on('data', function(chunk) {
