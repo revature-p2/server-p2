@@ -37,7 +37,7 @@ app.get('/creatergroup', function(req, res) {
 /////// NETWORK CREATE ///////
 
 app.get('/network', function(req, res) {
-  var command = spawn(__dirname + '/createnetwork.sh', [req.query.vnetname, req.query.vnetip, req.query.privatevnetsubnet, req.query.privatevnetip, req.query.publicvnetsubnet, req.query.publicvnetip]);
+  var command = spawn(__dirname + '/createnetwork.sh', [req.query.rgroup, req.query.vnetname, req.query.vnetip, req.query.privatevnetsubnet, req.query.privatevnetip, req.query.publicvnetsubnet, req.query.publicvnetip]);
   var output  = [];
 
   command.stdout.on('data', function(chunk) {
@@ -57,7 +57,7 @@ command.on('close', function(code) {
 ////// VM CREATE ///////
 
 app.get('/createvm', function(req, res) {
-  var command = spawn(__dirname + '/createvm.sh', [req.query.VMname, req.query.VMnetwork, req.query.VMsubnet, req.query.VMuser, req.query.VMpassword]);
+  var command = spawn(__dirname + '/createvm.sh', [req.query.rgroup, req.query.VMname, req.query.VMnetwork, req.query.VMsubnet, req.query.VMuser, req.query.VMpassword]);
   var output  = [];
 
   command.stdout.on('data', function(chunk) {
@@ -117,7 +117,7 @@ command.on('close', function(code) {
 ///// WEBAPP CREATE //////
 
 app.get('/webapp', function(req, res) {
-  var command = spawn(__dirname + '/webapp.sh', [req.query.webappname, req.query.gitrepo]);
+  var command = spawn(__dirname + '/webapp.sh', [req.query.rgroup, req.query.webappname, req.query.gitrepo]);
   var output  = [];
 
   command.stdout.on('data', function(chunk) {
@@ -137,7 +137,7 @@ command.on('close', function(code) {
 ////// BLOB STORAGE /////
 
 app.get('/blob', function(req, res) {
-  var command = spawn(__dirname + '/storage.sh', [req.query.storagename, req.query.containername]);
+  var command = spawn(__dirname + '/storage.sh', [req.query.rgroup, req.query.storagename, req.query.containername]);
   var output  = [];
 
   command.stdout.on('data', function(chunk) {
@@ -157,7 +157,7 @@ command.on('close', function(code) {
 ///// CREATE SQLDB /////
 
 app.get('/sqldb', function(req, res) {
-  var command = spawn(__dirname + '/sqldb.sh', [req.query.sqlserver, req.query.sqlusername, req.query.sqlpassword, req.query.sqldbname]);
+  var command = spawn(__dirname + '/sqldb.sh', [req.query.rgroup, req.query.sqlserver, req.query.sqlusername, req.query.sqlpassword, req.query.sqldbname]);
   var output  = [];
 
   command.stdout.on('data', function(chunk) {
@@ -178,7 +178,7 @@ command.on('close', function(code) {
 ////// CREATE COSMOS DB ///////
 
 app.get('/cosmos', function(req, res) {
-  var command = spawn(__dirname + '/cosmos.sh', [req.query.cosmosaccount, req.query.cosmosdbname, req.query.cosmosdbcollection]);
+  var command = spawn(__dirname + '/cosmos.sh', [req.query.rgroup, req.query.cosmosaccount, req.query.cosmosdbname, req.query.cosmosdbcollection]);
   var output  = [];
 
   command.stdout.on('data', function(chunk) {
